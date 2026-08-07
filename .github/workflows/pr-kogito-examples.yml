@@ -67,6 +67,8 @@ jobs:
         if: ${{ always() }}
         shell: bash
         run: |
+          echo "Surefire XML files found:"
+          find . -name 'TEST-*.xml' -path '*-reports/TEST-*.xml' || true
           if find . -name 'TEST-*.xml' -path '*-reports/TEST-*.xml' | xargs -r grep -lq '<failure\|<error[> ]' 2>/dev/null; then
             echo "Test failures detected in surefire reports"
             exit 1
