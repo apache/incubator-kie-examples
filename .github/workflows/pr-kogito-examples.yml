@@ -44,24 +44,63 @@ jobs:
       DEPENDENCY_TREE_FILE: 'mvn_dependency_tree_${{ matrix.job_name }}_${{ matrix.os }}.txt'
     steps:
       - name: Clean Disk Space
-        uses: apache/incubator-kie-kogito-pipelines/.ci/actions/ubuntu-disk-space@main
         if: ${{ matrix.os == 'ubuntu-latest' }}
+        shell: bash
+        run: |
+          echo "Available storage:"
+          df -h
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          echo "Available storage after cleanup:"
+          df -h
       - name: Support long paths
         if: ${{ matrix.os == 'windows-latest' }}
-        uses: apache/incubator-kie-kogito-pipelines/.ci/actions/long-paths@main
-      - name: Java and Maven Setup
-        uses: apache/incubator-kie-kogito-pipelines/.ci/actions/maven@main
+        shell: bash
+        run: git config --system core.longpaths true
+      - name: Setup Java
+        uses: actions/setup-java@v5.7.0
         with:
+          distribution: 'temurin'
           java-version: ${{ matrix.java-version }}
-          maven-version: ${{ matrix.maven-version }}
-          cache-key-prefix: ${{ runner.os }}-${{ matrix.java-version }}-maven${{ matrix.maven-version }}
+          check-latest: true
+      - name: Cache Maven download
+        uses: actions/cache@v6.1.0
+        with:
+          key: ${{ runner.os }}-maven-${{ matrix.maven-version }}
+          path: ~/.maven/download/
+      - name: Setup Maven
+        shell: bash
+        run: |
+          MAVEN_DIR="$HOME/.local/mvn"
+          MAVEN_VERSION="${{ matrix.maven-version }}"
+          DOWNLOAD_DIR="$HOME/.maven/download"
+          mkdir -p "$DOWNLOAD_DIR" "$MAVEN_DIR"
+          ARCHIVE="$DOWNLOAD_DIR/apache-maven-${MAVEN_VERSION}-bin.tar.gz"
+          if [ ! -f "$ARCHIVE" ]; then
+            curl -fsSL "https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz" -o "$ARCHIVE"
+          fi
+          tar -xzf "$ARCHIVE" -C "$MAVEN_DIR" --strip-components=1
+          echo "$MAVEN_DIR/bin" >> "$GITHUB_PATH"
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.m2/repository/*/*
+            !~/.m2/repository/org/jbpm
+            !~/.m2/repository/org/apache/kie
+            !~/.m2/repository/org/kie
+            !~/.m2/repository/org/drools
+            !~/.m2/repository/org/optaplanner
+          key: ${{ runner.os }}-${{ matrix.java-version }}-maven${{ matrix.maven-version }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-${{ matrix.java-version }}-maven${{ matrix.maven-version }}-m2
       - name: Build Chain
-        uses: apache/incubator-kie-kogito-pipelines/.ci/actions/build-chain@main
+        uses: kiegroup/github-action-build-chain@v3.5.10
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           KOGITO_EXAMPLES_SUBFOLDER_POM: ${{ matrix.env_KOGITO_EXAMPLES_SUBFOLDER_POM }}
         with:
           annotations-prefix: ${{ runner.os }}-${{ matrix.java-version }}/${{ matrix.maven-version }}
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
           definition-file: https://raw.githubusercontent.com/${GROUP:apache}/incubator-kie-kogito-pipelines/${BRANCH:main}/.ci/pull-request-config.yaml
       - name: Surefire Report
         if: ${{ always() }}
