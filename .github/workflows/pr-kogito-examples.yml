@@ -67,7 +67,7 @@ jobs:
         if: ${{ always() }}
         shell: bash
         run: |
-          if find . -name 'TEST-*.xml' -path '*-reports*' -not -path './maven-tools/*' | xargs -r grep -lq '<failure\|<error[> ]' 2>/dev/null; then
+          if find . -name 'TEST-*.xml' -path '*-reports/TEST-*.xml' | xargs -r grep -lq '<failure\|<error[> ]' 2>/dev/null; then
             echo "Test failures detected in surefire reports"
             exit 1
           fi
