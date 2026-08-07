@@ -31,13 +31,14 @@ on:
       - 'docsimg/**'
       - '.ci/jenkins/**'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   build:
     name: '${{ matrix.examples-subfolder }}'
     runs-on: ubuntu-latest
-    concurrency:
-      group: pr-${{ matrix.examples-subfolder }}-${{ github.event.pull_request.number }}
-      cancel-in-progress: true
     timeout-minutes: 180
     strategy:
       fail-fast: false
