@@ -64,12 +64,15 @@ jobs:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
           definition-file: https://raw.githubusercontent.com/${GROUP:apache}/incubator-kie-kogito-pipelines/${BRANCH:main}/.ci/pull-request-config.yaml
       - name: Surefire Report
-        uses: apache/incubator-kie-kogito-pipelines/.ci/actions/surefire-report@main
         if: ${{ always() }}
-        with:
-          report_paths: '**/*-reports/TEST-*.xml'
+        shell: bash
+        run: |
+          if find . -name 'TEST-*.xml' -path '*-reports*' | xargs grep -lq '<failure\|<error[> ]' 2>/dev/null; then
+            echo "Test failures detected in surefire reports"
+            exit 1
+          fi
       - name: Upload Dependency Trees
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         if: ${{ always() }}
         with:
           name: dependency-trees-logs_${{ matrix.job_name }}_${{ matrix.os }}
