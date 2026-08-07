@@ -60,7 +60,7 @@
     <profile>
       <id>default</id>
       <activation>
-        <activeByDefault>true</activeByDefault>
+        <activeByDefault>false</activeByDefault>
       </activation>
       <modules>
         <module>decisiontable-springboot-example</module>
