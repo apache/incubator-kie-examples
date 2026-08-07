@@ -54,9 +54,9 @@
   </licenses>
 
   <scm>
-    <connection>scm:git:https://github.com/apache/incubator-kie-kogito-examples.git</connection>
-    <developerConnection>scm:git:https://github.com/apache/incubator-kie-kogito-examples.git</developerConnection>
-    <url>https://github.com/apache/incubator-kie-kogito-examples</url>
+    <connection>scm:git:https://github.com/apache/incubator-kie-examples.git</connection>
+    <developerConnection>scm:git:https://github.com/apache/incubator-kie-examples.git</developerConnection>
+    <url>https://github.com/apache/incubator-kie-examples</url>
   </scm>
 
   <developers>

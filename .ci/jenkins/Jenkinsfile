@@ -12,7 +12,7 @@ pipeline {
         disableConcurrentBuilds(abortPrevious: true)
     }
     environment {
-        BUILDCHAIN_PROJECT = 'apache/incubator-kie-kogito-examples'
+        BUILDCHAIN_PROJECT = 'apache/incubator-kie-examples'
 
         KOGITO_EXAMPLES_BUILD_MVN_OPTS = '-Dvalidate-formatting'
     }

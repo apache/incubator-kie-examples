@@ -4,7 +4,7 @@ mvn_cmd=mvn $(mvn_opts)
 build_chain_branch=$(shell git branch --show-current)
 build_chain_file='https://raw.githubusercontent.com/apache/incubator-kie-kogito-pipelines/main/.ci/pull-request-config.yaml'
 build_chain_group='apache'
-build_chain_project='apache/incubator-kie-kogito-examples'
+build_chain_project='apache/incubator-kie-examples'
 
 default: help
 
@@ -21,7 +21,7 @@ build-quickly:
 .PHONY: build-upstream
 ## (build-chain) Build upstream projects from the same branch. If needed, you can modify the `build_chain_file`, `build_chain_group` and `build_chain_branch`. See `build_chain_file` for setting correct environment variables
 build-upstream: build-chain
-	build-chain build cross_pr -f ${build_chain_file} -o /tmp/bc -p ${build_chain_project} -b ${build_chain_branch} -g ${build_chain_group} --skipParallelCheckout --skipProjectExecution apache/incubator-kie-kogito-examples --skipProjectCheckout apache/incubator-kie-kogito-examples
+	build-chain build cross_pr -f ${build_chain_file} -o /tmp/bc -p ${build_chain_project} -b ${build_chain_branch} -g ${build_chain_group} --skipParallelCheckout --skipProjectExecution apache/incubator-kie-examples --skipProjectCheckout apache/incubator-kie-examples
 
 .PHONY: build-pr
 pr_link=
