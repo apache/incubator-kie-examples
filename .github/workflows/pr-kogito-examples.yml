@@ -95,7 +95,7 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.java-version }}-maven${{ matrix.maven-version }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-${{ matrix.java-version }}-maven${{ matrix.maven-version }}-m2
       - name: Build Chain
-        uses: kiegroup/github-action-build-chain@v3.5.10
+        uses: kiegroup/github-action-build-chain@v3.5.5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           KOGITO_EXAMPLES_SUBFOLDER_POM: ${{ matrix.env_KOGITO_EXAMPLES_SUBFOLDER_POM }}
