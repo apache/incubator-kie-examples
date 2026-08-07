@@ -65,6 +65,7 @@ jobs:
       - name: 'SETUP :: Checkout incubator-kie-examples'
         uses: actions/checkout@v7
         with:
+          repository: apache/incubator-kie-examples
           path: incubator-kie-examples
 
       - name: 'SETUP :: Java 17'
@@ -101,7 +102,7 @@ jobs:
         shell: bash
         run: |
           mvn --batch-mode --no-transfer-progress -fae -pl :kogito-examples -am install -DskipTests -DskipITs -Denforcer.skip=true -f incubator-kie-examples/pom.xml
-          mvn --batch-mode --no-transfer-progress -fae -f incubator-kie-examples/pom.xml -pl ${{ matrix.examples-subfolder }} install dependency:tree -DoutputFile=mvn_dependency_tree_${{ matrix.examples-subfolder }}_ubuntu-latest.txt
+          mvn --batch-mode --no-transfer-progress -fae -f incubator-kie-examples/${{ matrix.examples-subfolder }}/pom.xml install dependency:tree -DoutputFile=mvn_dependency_tree_${{ matrix.examples-subfolder }}_ubuntu-latest.txt
 
       - name: 'REPORT :: Upload dependency trees'
         uses: actions/upload-artifact@v7
