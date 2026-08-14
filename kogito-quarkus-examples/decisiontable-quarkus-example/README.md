@@ -17,7 +17,7 @@ REST endpoints are generated from query rules. You can insert `LoanApplication` 
 You will need:
   - Java 17+ installed
   - Environment variable JAVA_HOME set accordingly
-  - Maven 3.9.11+ installed
+  - Maven 3.9.16+ installed
 
 When using native image compilation, you will also need:
   - [GraalVM 21.0.2](https://github.com/graalvm/graalvm-ce-builds/releases/tag/vm-21.0.2) installed
