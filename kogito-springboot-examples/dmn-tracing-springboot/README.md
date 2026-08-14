@@ -9,7 +9,7 @@ A simple DMN service to evaluate a loan approval and generate tracing events tha
 ### Prerequisites
 
 You will need:
-  - Java 11+ installed
+  - Java 17+ installed
   - Environment variable JAVA_HOME set accordingly
   - Maven 3.9.16+ installed
 

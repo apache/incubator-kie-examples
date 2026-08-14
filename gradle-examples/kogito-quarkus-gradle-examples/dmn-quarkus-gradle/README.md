@@ -11,7 +11,7 @@ The org.kie.dmn.runtime.typecheck=true property is used to enable type and value
 ### Prerequisites
 
 You will need:
-  - Java 11+ installed
+  - Java 17+ installed
   - Environment variable JAVA_HOME set accordingly
 
 ## Build and run

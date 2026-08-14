@@ -13,7 +13,7 @@ Based on these two processes (defined using BPMN 2.0 format), the custom data ob
 ### Prerequisites
 
 You will need:
-  - Java 11+ installed
+  - Java 17+ installed
   - Environment variable JAVA_HOME set accordingly
   - Maven 3.9.16+ installed
 

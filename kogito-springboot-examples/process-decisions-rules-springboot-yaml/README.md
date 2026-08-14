@@ -111,7 +111,7 @@ The DMN file where this decision is declared is [TrafficViolation.dmn](src/main/
 ### Prerequisites
 
 You will need:
-  - Java 11+ installed
+  - Java 17+ installed
   - Environment variable JAVA_HOME set accordingly
   - Maven 3.9.16+ installed
 
