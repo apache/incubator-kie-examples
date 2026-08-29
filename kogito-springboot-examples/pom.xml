@@ -24,25 +24,122 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+  <!-- The Spring Boot examples inherit from the Kogito Spring Boot BOM so that the Spring Boot platform version, the
+       spring-boot-maven-plugin version and the Spring Boot-targeted dependency management are all taken from the
+       single place that defines them on the kie side. No Spring Boot version is declared in this repository.
+
+       A pom has a single parent, so this aggregator does not inherit from the examples root
+       (kogito-examples), which is a plain module list. The build configuration below (test wiring,
+       container properties, packaging manifests, reproducible-build settings, project metadata) is the
+       examples' shared configuration; kogito-quarkus-examples and kogito-springboot-examples each carry
+       it and must be kept in sync. -->
   <parent>
-    <groupId>org.kie.kogito.examples</groupId>
-    <artifactId>kogito-examples</artifactId>
+    <groupId>org.kie.kogito</groupId>
+    <artifactId>kogito-spring-boot-bom</artifactId>
     <version>999-SNAPSHOT</version>
+    <relativePath/>
   </parent>
 
+  <groupId>org.kie.kogito.examples</groupId>
   <artifactId>kogito-springboot-examples</artifactId>
   <packaging>pom</packaging>
   <name>Kogito Example :: Spring Boot</name>
+  <description>Kogito Example :: Spring Boot</description>
+
+  <url>http://kogito.kie.org/kogito-springboot-examples</url>
+  <inceptionYear>2019</inceptionYear>
+  <organization>
+    <name>The Apache Software Foundation</name>
+    <url>https://apache.org/</url>
+  </organization>
+
+  <licenses>
+    <license>
+      <name>Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <scm>
+    <connection>scm:git:https://github.com/apache/incubator-kie-examples.git/kogito-springboot-examples</connection>
+    <developerConnection>scm:git:https://github.com/apache/incubator-kie-examples.git/kogito-springboot-examples</developerConnection>
+    <url>https://github.com/apache/incubator-kie-examples/kogito-springboot-examples</url>
+  </scm>
+
+  <developers>
+    <developer>
+      <name>The Apache KIE Team</name>
+      <email>dev@kie.apache.org</email>
+      <url>https://kie.apache.org</url>
+      <organization>Apache Software Foundation</organization>
+      <organizationUrl>http://apache.org/</organizationUrl>
+    </developer>
+  </developers>
+
+  <mailingLists>
+    <mailingList>
+      <name>Development List</name>
+      <subscribe>dev-subscribe@kie.apache.org</subscribe>
+      <unsubscribe>dev-unsubscribe@kie.apache.org</unsubscribe>
+      <post>dev@kie.apache.org</post>
+      <archive>https://lists.apache.org/list.html?dev@kie.apache.org</archive>
+    </mailingList>
+    <mailingList>
+      <name>User List</name>
+      <subscribe>users-subscribe@kie.apache.org</subscribe>
+      <unsubscribe>users-unsubscribe@kie.apache.org</unsubscribe>
+      <post>users@kie.apache.org</post>
+      <archive>https://lists.apache.org/list.html?users@kie.apache.org</archive>
+    </mailingList>
+    <mailingList>
+      <name>Commits List</name>
+      <subscribe>commits-subscribe@kie.apache.org</subscribe>
+      <unsubscribe>commits-unsubscribe@kie.apache.org</unsubscribe>
+      <post>commits@kie.apache.org</post>
+      <archive>https://lists.apache.org/list.html?commits@kie.apache.org</archive>
+    </mailingList>
+  </mailingLists>
 
   <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+    <version.org.kie.kogito>999-SNAPSHOT</version.org.kie.kogito>
+
+    <surefire.forkCount>1</surefire.forkCount>
+    <failsafe.include>**/*IT.java</failsafe.include>
+    <failsafe.exclude>**/Native*IT.java</failsafe.exclude>
+    <alphanetworkCompilerEnabled>false</alphanetworkCompilerEnabled>
+    <tests.category></tests.category>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <!-- dependencies version -->
+    <version.org.skyscreamer>1.5.0</version.org.skyscreamer>
+    <!-- JKube -->
+    <version.org.eclipse.jkube>1.4.0</version.org.eclipse.jkube>
+    <!-- WebJars -->
+    <version.org.webjars>4.5.3</version.org.webjars>
+
+    <version.jib.plugin>3.3.1</version.jib.plugin>
+    <!-- Reproducible builds -->
+    <project.build.outputTimestamp>2024-01-16T00:00:00Z</project.build.outputTimestamp>
+    <version.maven.artifact.plugin>3.4.1</version.maven.artifact.plugin>
     <!-- Used to define which poms are allowed to have dependencyManagement sections. This is to enforce the convention that only the root pom should have dependencyManagement, and all other poms should inherit from it. -->
     <allowedPomsList>org.kie.kogito.examples:kogito-springboot-examples</allowedPomsList>
     <java.module.name>org.kie.kogito.examples.springboot</java.module.name>
-    <!-- TODO: remove the following properties and declare  kogito-apps-springboot-bom as parent, to have everything already inherited-->
-    <version.org.springframework.boot>4.0.7</version.org.springframework.boot>
-    <!-- This is needed to avoid having a different version of netty inherited by kogito-examples. -->
-    <version.io.netty>4.2.16.Final</version.io.netty>
   </properties>
+
+  <repositories>
+    <!-- useful to resolve parent pom when it is a SNAPSHOT -->
+    <repository>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <id>apache.snapshots</id>
+      <name>Apache Snapshot Repository</name>
+      <url>https://repository.apache.org/snapshots</url>
+    </repository>
+  </repositories>
 
   <dependencyManagement>
     <dependencies>
@@ -52,6 +149,23 @@
         <version>${project.version}</version>
         <type>pom</type>
         <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.webjars</groupId>
+        <artifactId>bootstrap</artifactId>
+        <version>${version.org.webjars}</version>
+        <scope>runtime</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.skyscreamer</groupId>
+        <artifactId>jsonassert</artifactId>
+        <version>${version.org.skyscreamer}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.kie.kogito</groupId>
+        <artifactId>kogito-test-utils</artifactId>
+        <version>${version.org.kie.kogito}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -154,9 +268,222 @@
     <pluginManagement>
       <plugins>
         <plugin>
-          <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot-maven-plugin</artifactId>
-          <version>${version.org.springframework.boot}</version>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>2.5</version>
+          <executions>
+            <execution>
+              <id>add-it-resources</id>
+              <phase>pre-integration-test</phase>
+              <goals>
+                <goal>copy-resources</goal>
+              </goals>
+              <configuration>
+                <outputDirectory>${project.build.directory}/test-run/META-INF</outputDirectory>
+                <resources>
+                  <resource>
+                    <directory>target/classes/META-INF</directory>
+                  </resource>
+                </resources>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>${version.surefire.plugin}</version>
+          <configuration>
+            <forkCount>${surefire.forkCount}</forkCount>
+            <reuseForks>true</reuseForks>
+            <includes>
+              <include>${failsafe.include}</include>
+            </includes>
+            <excludes>
+              <exclude>${failsafe.exclude}</exclude>
+            </excludes>
+            <systemPropertyVariables>
+              <tests.category>${tests.category}</tests.category>
+              <enable.resource.infinispan>${enable.resource.infinispan}</enable.resource.infinispan>
+              <enable.resource.kafka>${enable.resource.kafka}</enable.resource.kafka>
+              <enable.resource.postgresql>${enable.resource.postgresql}</enable.resource.postgresql>
+              <enable.resource.mongodb>${enable.resource.mongodb}</enable.resource.mongodb>
+              <container.image.keycloak>${container.image.keycloak}</container.image.keycloak>
+              <container.image.infinispan>${container.image.infinispan}</container.image.infinispan>
+              <container.image.kafka>${container.image.kafka}</container.image.kafka>
+              <native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>
+            </systemPropertyVariables>
+            <classesDirectory>${project.build.outputDirectory}</classesDirectory>
+            <workingDirectory>${project.build.directory}/test-run</workingDirectory>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>integration-test</goal>
+                <goal>verify</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-enforcer-plugin</artifactId>
+          <version>${version.enforcer.plugin}</version>
+          <executions>
+            <execution>
+              <id>enforce-versions</id>
+              <goals>
+                <goal>enforce</goal>
+              </goals>
+              <configuration>
+                <rules>
+                  <requireMavenVersion>
+                    <version>${version.maven}</version>
+                  </requireMavenVersion>
+                  <requireJavaVersion>
+                    <version>${maven.compiler.release}</version>
+                  </requireJavaVersion>
+                </rules>
+              </configuration>
+            </execution>
+          </executions>
+          <configuration>
+            <skip>true</skip>
+          </configuration>
+        </plugin>
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${version.compiler.plugin}</version>
+          <configuration>
+            <release>${maven.compiler.release}</release>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>${version.surefire.plugin}</version>
+          <configuration>
+            <forkCount>${surefire.forkCount}</forkCount>
+            <reuseForks>true</reuseForks>
+            <runOrder>hourly</runOrder>
+            <systemPropertyVariables>
+              <tests.category>${tests.category}</tests.category>
+            </systemPropertyVariables>
+          </configuration>
+        </plugin>
+        <!-- Packaging -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>${version.jar.plugin}</version>
+          <executions>
+            <execution>
+              <id>default-jar</id>
+              <configuration>
+                <archive>
+                  <manifestEntries combine.children="append">
+                    <Automatic-Module-Name>${java.module.name}</Automatic-Module-Name>
+                  </manifestEntries>
+                </archive>
+              </configuration>
+            </execution>
+            <!-- No OSGi manifestEntries for <goal>jar</goal>: if it supported, then felix has already added them -->
+            <execution>
+              <id>test-jar</id>
+              <goals>
+                <goal>test-jar</goal>
+              </goals>
+              <configuration>
+                <skipIfEmpty>true</skipIfEmpty>
+                <excludes>
+                  <exclude>**/logback-test.xml</exclude>
+                  <exclude>**/jndi.properties</exclude>
+                </excludes>
+                <archive>
+                  <manifestEntries>
+                    <Bundle-SymbolicName>${java.module.name}.tests</Bundle-SymbolicName>
+                    <Bundle-Version>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${osgi.snapshot.qualifier}</Bundle-Version>
+                    <Bundle-Name>${project.name}</Bundle-Name>
+                    <Bundle-Vendor>${project.organization.name}</Bundle-Vendor>
+                  </manifestEntries>
+                </archive>
+              </configuration>
+            </execution>
+          </executions>
+          <configuration>
+            <archive>
+              <manifest>
+                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+              </manifest>
+            </archive>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>${version.source.plugin}</version>
+          <executions>
+            <execution>
+              <id>attach-sources</id>
+              <goals>
+                <goal>jar-no-fork</goal>
+              </goals>
+              <configuration>
+                <archive>
+                  <manifestEntries>
+                    <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
+                    <Bundle-SymbolicName>${java.module.name}.source</Bundle-SymbolicName>
+                    <Bundle-Version>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${osgi.snapshot.qualifier}</Bundle-Version>
+                    <Bundle-Name>${project.name}</Bundle-Name>
+                    <Bundle-Vendor>${project.organization.name}</Bundle-Vendor>
+                    <Eclipse-SourceBundle>
+                      ${java.module.name};version="${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${osgi.snapshot.qualifier}";roots:="."
+                    </Eclipse-SourceBundle>
+                  </manifestEntries>
+                </archive>
+              </configuration>
+            </execution>
+            <execution>
+              <id>attach-test-sources</id>
+              <goals>
+                <goal>test-jar-no-fork</goal>
+              </goals>
+              <configuration>
+                <archive>
+                  <manifestEntries>
+                    <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
+                    <Bundle-SymbolicName>${java.module.name}.tests.source</Bundle-SymbolicName>
+                    <Bundle-Version>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${osgi.snapshot.qualifier}</Bundle-Version>
+                    <Bundle-Name>${project.name}</Bundle-Name>
+                    <Bundle-Vendor>${project.organization.name}</Bundle-Vendor>
+                    <Eclipse-SourceBundle>
+                      ${java.module.name}.tests;version="${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${osgi.snapshot.qualifier}";roots:="."
+                    </Eclipse-SourceBundle>
+                  </manifestEntries>
+                </archive>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+        <!-- Image build / Kubernetes deployment -->
+        <plugin>
+          <groupId>org.eclipse.jkube</groupId>
+          <artifactId>kubernetes-maven-plugin</artifactId>
+          <version>${version.org.eclipse.jkube}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.eclipse.jkube</groupId>
+          <artifactId>openshift-maven-plugin</artifactId>
+          <version>${version.org.eclipse.jkube}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-artifact-plugin</artifactId>
+          <version>${version.maven.artifact.plugin}</version>
+          <configuration>
+            <outputTimestamp>${project.build.outputTimestamp}</outputTimestamp>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>com.google.cloud.tools</groupId>
@@ -168,6 +495,36 @@
         </plugin>
       </plugins>
     </pluginManagement>
+    <plugins>
+      <!-- need at least maven 3.8.6+, fail fast with actionable error rather than obscure errors like [ Error injecting: private org.eclipse.aether.spi.log.Logger org.apache.maven.repository.internal.DefaultVersionRangeResolver.logger ] -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <!-- Entry needed to create test-jars even for packaging types war, bundle, ... -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <!-- Entry needed to create, install and deploy sources jars -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <configuration>
+          <systemPropertyVariables>
+            <container.image.kafka>${container.image.kafka}</container.image.kafka>
+          </systemPropertyVariables>
+        </configuration>
+      </plugin>
+    </plugins>
   </build>
 
 </project>

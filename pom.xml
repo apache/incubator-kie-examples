@@ -93,26 +93,13 @@
     </mailingList>
   </mailingLists>
 
+  <!-- Plain module list. The Quarkus and Spring Boot examples do not inherit from this pom: their
+       aggregators inherit from kogito-quarkus-bom and kogito-spring-boot-bom respectively (single source
+       of the platform versions on the kie side) and carry the examples' shared build configuration
+       themselves. Only the Java and Gradle examples inherit from here. -->
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-    <version.org.kie.kogito>999-SNAPSHOT</version.org.kie.kogito>
-
-    <surefire.forkCount>1</surefire.forkCount>
-    <failsafe.include>**/*IT.java</failsafe.include>
-    <failsafe.exclude>**/Native*IT.java</failsafe.exclude>
-    <alphanetworkCompilerEnabled>false</alphanetworkCompilerEnabled>
-    <tests.category></tests.category>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <!-- dependencies version -->
-    <version.org.skyscreamer>1.5.0</version.org.skyscreamer>
-    <!-- JKube -->
-    <version.org.eclipse.jkube>1.4.0</version.org.eclipse.jkube>
-    <!-- WebJars -->
-    <version.org.webjars>4.5.3</version.org.webjars>
-
-    <version.jib.plugin>3.3.1</version.jib.plugin>
     <!-- Reproducible builds -->
     <project.build.outputTimestamp>2024-01-16T00:00:00Z</project.build.outputTimestamp>
     <version.maven.artifact.plugin>3.4.1</version.maven.artifact.plugin>
@@ -147,238 +134,9 @@
     </profile>
   </profiles>
 
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.webjars</groupId>
-        <artifactId>bootstrap</artifactId>
-        <version>${version.org.webjars}</version>
-        <scope>runtime</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.skyscreamer</groupId>
-        <artifactId>jsonassert</artifactId>
-        <version>${version.org.skyscreamer}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.kie.kogito</groupId>
-        <artifactId>kogito-test-utils</artifactId>
-        <version>${version.org.kie.kogito}</version>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
-
   <build>
     <pluginManagement>
       <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-resources-plugin</artifactId>
-          <version>2.5</version>
-          <executions>
-            <execution>
-              <id>add-it-resources</id>
-              <phase>pre-integration-test</phase>
-              <goals>
-                <goal>copy-resources</goal>
-              </goals>
-              <configuration>
-                <outputDirectory>${project.build.directory}/test-run/META-INF</outputDirectory>
-                <resources>
-                  <resource>
-                    <directory>target/classes/META-INF</directory>
-                  </resource>
-                </resources>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-failsafe-plugin</artifactId>
-          <version>${version.surefire.plugin}</version>
-          <configuration>
-            <forkCount>${surefire.forkCount}</forkCount>
-            <reuseForks>true</reuseForks>
-            <includes>
-              <include>${failsafe.include}</include>
-            </includes>
-            <excludes>
-              <exclude>${failsafe.exclude}</exclude>
-            </excludes>
-            <systemPropertyVariables>
-              <tests.category>${tests.category}</tests.category>
-              <enable.resource.infinispan>${enable.resource.infinispan}</enable.resource.infinispan>
-              <enable.resource.kafka>${enable.resource.kafka}</enable.resource.kafka>
-              <enable.resource.postgresql>${enable.resource.postgresql}</enable.resource.postgresql>
-              <enable.resource.mongodb>${enable.resource.mongodb}</enable.resource.mongodb>
-              <container.image.keycloak>${container.image.keycloak}</container.image.keycloak>
-              <container.image.infinispan>${container.image.infinispan}</container.image.infinispan>
-              <container.image.kafka>${container.image.kafka}</container.image.kafka>
-              <native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>
-            </systemPropertyVariables>
-            <classesDirectory>${project.build.outputDirectory}</classesDirectory>
-            <workingDirectory>${project.build.directory}/test-run</workingDirectory>
-          </configuration>
-          <executions>
-            <execution>
-              <goals>
-                <goal>integration-test</goal>
-                <goal>verify</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-enforcer-plugin</artifactId>
-          <version>${version.enforcer.plugin}</version>
-          <executions>
-            <execution>
-              <id>enforce-versions</id>
-              <goals>
-                <goal>enforce</goal>
-              </goals>
-              <configuration>
-                <rules>
-                  <requireMavenVersion>
-                    <version>${version.maven}</version>
-                  </requireMavenVersion>
-                  <requireJavaVersion>
-                    <version>${maven.compiler.release}</version>
-                  </requireJavaVersion>
-                </rules>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>${version.compiler.plugin}</version>
-          <configuration>
-            <release>${maven.compiler.release}</release>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>${version.surefire.plugin}</version>
-          <configuration>
-            <forkCount>${surefire.forkCount}</forkCount>
-            <reuseForks>true</reuseForks>
-            <runOrder>hourly</runOrder>
-            <systemPropertyVariables>
-              <tests.category>${tests.category}</tests.category>
-            </systemPropertyVariables>
-          </configuration>
-        </plugin>
-        <!-- Packaging -->
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-jar-plugin</artifactId>
-          <version>${version.jar.plugin}</version>
-          <executions>
-            <execution>
-              <id>default-jar</id>
-              <configuration>
-                <archive>
-                  <manifestEntries combine.children="append">
-                    <Automatic-Module-Name>${java.module.name}</Automatic-Module-Name>
-                  </manifestEntries>
-                </archive>
-              </configuration>
-            </execution>
-            <!-- No OSGi manifestEntries for <goal>jar</goal>: if it supported, then felix has already added them -->
-            <execution>
-              <id>test-jar</id>
-              <goals>
-                <goal>test-jar</goal>
-              </goals>
-              <configuration>
-                <skipIfEmpty>true</skipIfEmpty>
-                <excludes>
-                  <exclude>**/logback-test.xml</exclude>
-                  <exclude>**/jndi.properties</exclude>
-                </excludes>
-                <archive>
-                  <manifestEntries>
-                    <Bundle-SymbolicName>${java.module.name}.tests</Bundle-SymbolicName>
-                    <Bundle-Version>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${osgi.snapshot.qualifier}</Bundle-Version>
-                    <Bundle-Name>${project.name}</Bundle-Name>
-                    <Bundle-Vendor>${project.organization.name}</Bundle-Vendor>
-                  </manifestEntries>
-                </archive>
-              </configuration>
-            </execution>
-          </executions>
-          <configuration>
-            <archive>
-              <manifest>
-                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-              </manifest>
-            </archive>
-          </configuration>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-source-plugin</artifactId>
-          <version>${version.source.plugin}</version>
-          <executions>
-            <execution>
-              <id>attach-sources</id>
-              <goals>
-                <goal>jar-no-fork</goal>
-              </goals>
-              <configuration>
-                <archive>
-                  <manifestEntries>
-                    <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
-                    <Bundle-SymbolicName>${java.module.name}.source</Bundle-SymbolicName>
-                    <Bundle-Version>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${osgi.snapshot.qualifier}</Bundle-Version>
-                    <Bundle-Name>${project.name}</Bundle-Name>
-                    <Bundle-Vendor>${project.organization.name}</Bundle-Vendor>
-                    <Eclipse-SourceBundle>
-                      ${java.module.name};version="${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${osgi.snapshot.qualifier}";roots:="."
-                    </Eclipse-SourceBundle>
-                  </manifestEntries>
-                </archive>
-              </configuration>
-            </execution>
-            <execution>
-              <id>attach-test-sources</id>
-              <goals>
-                <goal>test-jar-no-fork</goal>
-              </goals>
-              <configuration>
-                <archive>
-                  <manifestEntries>
-                    <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
-                    <Bundle-SymbolicName>${java.module.name}.tests.source</Bundle-SymbolicName>
-                    <Bundle-Version>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${osgi.snapshot.qualifier}</Bundle-Version>
-                    <Bundle-Name>${project.name}</Bundle-Name>
-                    <Bundle-Vendor>${project.organization.name}</Bundle-Vendor>
-                    <Eclipse-SourceBundle>
-                      ${java.module.name}.tests;version="${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}.${osgi.snapshot.qualifier}";roots:="."
-                    </Eclipse-SourceBundle>
-                  </manifestEntries>
-                </archive>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
-        <!-- Image build / Kubernetes deployment -->
-        <plugin>
-          <groupId>org.eclipse.jkube</groupId>
-          <artifactId>kubernetes-maven-plugin</artifactId>
-          <version>${version.org.eclipse.jkube}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.eclipse.jkube</groupId>
-          <artifactId>openshift-maven-plugin</artifactId>
-          <version>${version.org.eclipse.jkube}</version>
-        </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-artifact-plugin</artifactId>
@@ -397,33 +155,9 @@
       </plugins>
     </pluginManagement>
     <plugins>
-      <!-- need at least maven 3.8.6+, fail fast with actionable error rather than obscure errors like [ Error injecting: private org.eclipse.aether.spi.log.Logger org.apache.maven.repository.internal.DefaultVersionRangeResolver.logger ] -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <!-- Entry needed to create test-jars even for packaging types war, bundle, ... -->
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <!-- Entry needed to create, install and deploy sources jars -->
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-failsafe-plugin</artifactId>
-        <configuration>
-          <systemPropertyVariables>
-            <container.image.kafka>${container.image.kafka}</container.image.kafka>
-          </systemPropertyVariables>
-        </configuration>
       </plugin>
     </plugins>
   </build>
