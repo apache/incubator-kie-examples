@@ -26,7 +26,8 @@
 
   <!-- The Quarkus examples inherit from the Kogito Quarkus BOM so that the Quarkus platform version, the
        quarkus-maven-plugin version and the Quarkus-targeted dependency management are all taken from the
-       single place that defines them on the kie side. No Quarkus version is declared in this repository.
+       single place that defines them on the kie side. No Quarkus version is declared in the Maven examples (the Gradle examples keep their own literal pins in
+       gradle.properties: Gradle cannot inherit from a Maven parent).
 
        A pom has a single parent, so this aggregator does not inherit from the examples root
        (kogito-examples), which is a plain module list. The build configuration below (test wiring,
