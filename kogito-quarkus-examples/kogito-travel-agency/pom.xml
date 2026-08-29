@@ -35,8 +35,6 @@
     <module>extended</module>
   </modules>
   <properties>
-    <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
-    <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
   </properties>
   <dependencyManagement>
     <dependencies>
