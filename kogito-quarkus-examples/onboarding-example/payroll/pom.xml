@@ -30,12 +30,6 @@
   <artifactId>payroll</artifactId>
   <name>Kogito Example :: Onboarding Example :: Payroll with DMN</name>
   <description>Payroll related decisions for onboarding</description>
-  <properties>
-  </properties>
-  <dependencyManagement>
-    <dependencies>
-    </dependencies>
-  </dependencyManagement>
   <dependencies>
     <dependency>
       <groupId>org.jbpm</groupId>

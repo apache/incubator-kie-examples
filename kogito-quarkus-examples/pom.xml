@@ -338,7 +338,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
-          <version>2.5</version>
+          <version>${version.resources.plugin}</version>
           <executions>
             <execution>
               <id>add-it-resources</id>

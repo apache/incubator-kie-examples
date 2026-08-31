@@ -34,10 +34,4 @@
     <module>travels</module>
     <module>visas</module>
   </modules>
-  <properties>
-  </properties>
-  <dependencyManagement>
-    <dependencies>
-    </dependencies>
-  </dependencyManagement>
 </project>
