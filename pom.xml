@@ -103,8 +103,6 @@
     <!-- Reproducible builds -->
     <project.build.outputTimestamp>2024-01-16T00:00:00Z</project.build.outputTimestamp>
     <version.maven.artifact.plugin>3.4.1</version.maven.artifact.plugin>
-    <!-- JKube -->
-    <version.org.eclipse.jkube>1.4.0</version.org.eclipse.jkube>
     <!-- Used to define which poms are allowed to have dependencyManagement sections. This is to enforce the convention that only the root pom should have dependencyManagement, and all other poms should inherit from it. -->
     <allowedPomsList>org.kie.kogito.examples:kogito-examples</allowedPomsList>
   </properties>
@@ -154,22 +152,12 @@
             <skip>true</skip>
           </configuration>
         </plugin>
-        <!-- Kept pinned here for the Java and Gradle examples, which inherit from this pom: failsafe must
-             track surefire (${version.surefire.plugin}), and the JKube plugins must not resolve to LATEST. -->
+        <!-- The Java and Gradle trees inherit from this pom and get no aggregator pluginManagement:
+             failsafe must track surefire, which the kie parent pins off a different property. -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
           <version>${version.surefire.plugin}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.eclipse.jkube</groupId>
-          <artifactId>kubernetes-maven-plugin</artifactId>
-          <version>${version.org.eclipse.jkube}</version>
-        </plugin>
-        <plugin>
-          <groupId>org.eclipse.jkube</groupId>
-          <artifactId>openshift-maven-plugin</artifactId>
-          <version>${version.org.eclipse.jkube}</version>
         </plugin>
       </plugins>
     </pluginManagement>
