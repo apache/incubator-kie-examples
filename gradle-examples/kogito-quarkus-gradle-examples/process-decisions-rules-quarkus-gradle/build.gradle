@@ -43,8 +43,8 @@ version '999-SNAPSHOT'
 dependencies {
   implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
   implementation 'io.quarkus:quarkus-arc'
-  implementation 'io.quarkus:quarkus-resteasy'
-  implementation 'io.quarkus:quarkus-resteasy-jackson'
+  implementation 'io.quarkus:quarkus-rest'
+  implementation 'io.quarkus:quarkus-rest-jackson'
   implementation 'io.quarkus:quarkus-smallrye-openapi'
 
   implementation platform("org.kie.kogito:kogito-quarkus-bom:${kogitoVersion}")
