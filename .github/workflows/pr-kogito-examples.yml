@@ -59,7 +59,8 @@ jobs:
       - name: 'SETUP :: Checkout incubator-kie'
         uses: actions/checkout@v7
         with:
-          repository: apache/incubator-kie
+          repository: Kusuma04-dev/incubator-kie   # fork that owns the incubator-kie branch
+          ref: resteasy-migration
           path: incubator-kie
 
       - name: 'SETUP :: Checkout incubator-kie-examples'
