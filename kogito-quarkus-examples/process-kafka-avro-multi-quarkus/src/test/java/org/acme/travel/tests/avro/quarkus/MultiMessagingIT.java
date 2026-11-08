@@ -65,7 +65,7 @@ public class MultiMessagingIT {
         logger.info("Event received for processed travellers");
         assertEquals("Real Betis Balompie", message.key());
         Traveller event = utils.readObject(message.value(), Traveller.class);
-        logger.info("Event deserialized sucessfully {}", event);
+        logger.info("Event deserialized successfully {}", event);
         assertTraveller(event);
         countDownLatch.countDown();
         logger.info("Count down is {}", countDownLatch.getCount());
