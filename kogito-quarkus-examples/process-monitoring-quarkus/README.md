@@ -271,3 +271,11 @@ Example response:
   ...
 }
 ```
+
+### gRPC OrderStatusService/GetStatus
+
+The application also exposes a small gRPC service ([`order_status.proto`](./src/main/proto/order_status.proto)) on port `9000`. It returns `FOUND` or `NOT_FOUND` for the id of an order process instance (the `id` returned by `POST /orders`):
+
+```sh
+grpcurl -plaintext -import-path src/main/proto -proto order_status.proto -d '{"order_id": "<id>"}' localhost:9000 order.OrderStatusService/GetStatus
+```

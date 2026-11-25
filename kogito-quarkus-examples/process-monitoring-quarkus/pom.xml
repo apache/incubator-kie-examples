@@ -57,6 +57,11 @@
       <groupId>org.kie</groupId>
       <artifactId>kie-addons-quarkus-monitoring-prometheus</artifactId>
     </dependency>
+    <!-- gRPC service of this example (OrderStatusServiceImpl) -->
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-grpc</artifactId>
+    </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-container-image-jib</artifactId>
@@ -109,6 +114,7 @@
         <executions>
           <execution>
             <goals>
+              <goal>generate-code</goal>
               <goal>build</goal>
             </goals>
           </execution>
